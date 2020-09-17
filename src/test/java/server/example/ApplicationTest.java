@@ -1,9 +1,9 @@
 package server.example;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micronaut.configuration.metrics.management.endpoint.MetricsEndpoint.AvailableTag;
 import io.micronaut.configuration.metrics.management.endpoint.MetricsEndpoint.MetricDetails;
 import io.micronaut.http.HttpRequest;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -21,11 +21,13 @@ public class ApplicationTest {
 
     @Test
     public void clientErrorsShouldNotBeReportedAsServerError() {
-        int responseCode = 400;
-        assertThatThrownBy(() -> client.toBlocking().exchange(HttpRequest.GET("/?status=" + responseCode)))
+
+        HttpStatus expectedResponse = HttpStatus.UNAUTHORIZED;
+
+        assertThatThrownBy(() -> client.toBlocking().exchange(HttpRequest.GET("/this-route-does-not-exist")))
             .isInstanceOfSatisfying(
                 HttpClientResponseException.class,
-                resp -> assertThat(resp.getStatus().getCode()).isEqualTo(responseCode)
+                resp -> assertThat(resp.getStatus().getCode()).isEqualTo(expectedResponse.getCode())
             );
 
         MetricDetails metricDetails =
@@ -35,11 +37,17 @@ public class ApplicationTest {
                                            .filter(tag -> "status".equals(tag.getTag()))
                                            .findFirst()
                                            .orElseThrow();
+
         assertThat(statusTag
                        .getValues()
-                       .contains(responseCode)).isTrue();
+                       .contains(expectedResponse)).isTrue();
+
         assertThat(statusTag
                        .getValues()
                        .contains("500")).isFalse();
+
+
+
     }
+
 }

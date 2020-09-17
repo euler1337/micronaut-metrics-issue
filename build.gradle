@@ -48,6 +48,7 @@ dependencies {
     implementation "io.micronaut:micronaut-management"
     implementation "io.micronaut.micrometer:micronaut-micrometer-registry-statsd"
     implementation "io.micronaut.micrometer:micronaut-micrometer-core"
+    implementation "io.micronaut.security:micronaut-security"
     implementation "org.projectlombok:lombok:1.18.+"
 
     implementation "com.fasterxml.jackson:jackson-bom:2.10.4"

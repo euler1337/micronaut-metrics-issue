@@ -40,7 +40,7 @@ public class ApplicationTest {
 
         assertThat(statusTag
                        .getValues()
-                       .contains(expectedResponse)).isTrue();
+                       .contains(String.valueOf(expectedResponse.getCode()))).isTrue();
 
         assertThat(statusTag
                        .getValues()

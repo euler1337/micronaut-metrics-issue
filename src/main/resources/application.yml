@@ -1,0 +1,8 @@
+micronaut:
+  application:
+    name: backend
+  metrics:
+    enabled: true
+    binders:
+      web:
+        enabled: true
